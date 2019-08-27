@@ -1,24 +1,34 @@
 cc_library(
-    name="stdext",
+    name = "headers",
     visibility = ["//visibility:public"],
-    hdrs=glob([
+    
+    deps=[
+        "@fmt//:headers",
+    ],
+    
+    includes=[
+        "src",
+    ],
+    hdrs = glob([
         "src/**/*.h*",
     ]),
-    srcs=glob([
+)
+
+cc_library(
+    name = "stdext",
+    visibility = ["//visibility:public"],
+
+    srcs = glob([
         "src/**/*.c*"
     ]),
-    includes=[
-        "src"
-    ],
     copts = select({
         "@bazel_tools//src/conditions:windows": ["/std:c++17"],
-        "@bazel_tools//src/conditions:darwin": ["-std=c++17"],
         "//conditions:default": ["-std=c++17"],
     }),
-    deps=[
-        "@fmt//:fmt",
-        "@catch//:single_include",
-    ]
+    deps = [
+        ":headers",
+        #"@fmt//:fmt",
+    ],
 )
 
 cc_test(
