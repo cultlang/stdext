@@ -20,19 +20,22 @@ constexpr size_t offsetof_impl(T const* t, U T::* a)
 
 #include <type_traits>
 
-//#undef offsetof
-//#define offsetof(Type_, Attr_)                          \
-//    (ptrdiff_t)((unsigned char*)(void*)&((*(Type_*)0).Attr_) - (unsigned char*)(void*)&(*(Type_*)0))
-
 namespace stdext
 {
+    //
+    // other
+    //
+    
+    template <class...> constexpr std::false_type always_false { };
+    
 	//
-	// helpers
+	// callables
 	//
 
 	// http://stackoverflow.com/a/22851790
 	template <typename M>
-	struct memptr {
+	struct memptr
+    {
 	private:
 		template <typename C, typename T>
 		static T get_value_type(T C::*v);
@@ -48,11 +51,14 @@ namespace stdext
 	//
 
 	template <class T, template <class...> class Template>
-	struct is_specialization : std::false_type {};
+	struct is_specialization : std::false_type { };
 
 	template <template <class...> class Template, class... Args>
-	struct is_specialization<Template<Args...>, Template> : std::true_type {};
+	struct is_specialization<Template<Args...>, Template> : std::true_type { };
 
+	template <class T, template <class...> class Template>
+    inline constexpr bool is_specialization_v = is_specialization<T, Template>::value;
+    
 	//
 	// parameter packs
 	//
@@ -76,48 +82,23 @@ namespace stdext
 	};
 
 	//
-	// iterators
+	// detection
 	//
+    
+    // https://blog.tartanllama.xyz/detection-idiom/
+    
+    namespace detail
+    {
+        template <template <class...> class Trait, class Enabler, class... Args>
+        struct is_detected : std::false_type{};
 
-	template<typename T>
-	struct has_const_iterator
-	{
-	private:
-		typedef char                      yes;
-		typedef struct { char array[2]; } no;
+        template <template <class...> class Trait, class... Args>
+        struct is_detected<Trait, std::void_t<Trait<Args...>>, Args...> : std::true_type{};
+    }
 
-		template<typename C> static yes test(typename C::const_iterator*);
-		template<typename C> static no  test(...);
-	public:
-		static const bool value = sizeof(test<T>(0)) == sizeof(yes);
-		typedef T type;
-	};
-
-	// template <typename T>
-	// struct has_begin_end
-	// {
-	// 	template<typename C> static char(&f(typename std::enable_if<
-	// 		std::is_same<decltype(static_cast<typename C::const_iterator(C::*)() const>(&C::begin)),
-	// 		typename C::const_iterator(C::*)() const>::value, void>::type*))[1];
-
-	// 	template<typename C> static char(&f(...))[2];
-
-	// 	template<typename C> static char(&g(typename std::enable_if<
-	// 		std::is_same<decltype(static_cast<typename C::const_iterator(C::*)() const>(&C::end)),
-	// 		typename C::const_iterator(C::*)() const>::value, void>::type*))[1];
-
-	// 	template<typename C> static char(&g(...))[2];
-
-	// 	static bool const beg_value = sizeof(f<T>(0)) == 1;
-	// 	static bool const end_value = sizeof(g<T>(0)) == 1;
-	// };
-
-	// template<typename T>
-	// struct is_container
-	// 	: std::integral_constant<bool,
-	// 		has_const_iterator<T>::value
-	// 		&& has_begin_end<T>::beg_value
-	// 		&& has_begin_end<T>::end_value
-	// 	>
-	// { };
+    template <template <typename...> typename Trait, typename... Args>
+    using is_detected = typename detail::is_detected<Trait, void, Args...>::type;
+    
+    template <template <typename...> typename Trait, typename... Args>
+    inline constexpr bool is_detected_v = is_detected<Trait, Args...>::value;
 }

@@ -15,7 +15,7 @@ cc_library(
 )
 
 cc_library(
-    name = "stdext",
+    name = "code",
     visibility = ["//visibility:public"],
 
     srcs = glob([
@@ -27,7 +27,7 @@ cc_library(
     }),
     deps = [
         ":headers",
-        #"@fmt//:fmt",
+        "@fmt//:fmt",
     ],
 )
 
@@ -35,7 +35,11 @@ cc_test(
     name = "test",
     srcs = glob(["test/**/*.cpp"]),
     deps = [
-        ":stdext",
+        ":code",
         "@catch//:single_include",
     ],
+    copts = select({
+        "@bazel_tools//src/conditions:windows": ["/std:c++17"],
+        "//conditions:default": ["-std=c++17"],
+    }),
 )

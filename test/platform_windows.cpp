@@ -6,6 +6,8 @@
 
 #ifdef _WIN32
 TEST_CASE( "No Error is Empty", "[platform_windows]" ) {
+    SetLastError(0);
+    
     auto err = stdext::platform::windows::GetLastErrorAsString();
     
     REQUIRE( err == "");
