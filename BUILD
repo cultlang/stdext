@@ -27,7 +27,6 @@ cc_library(
     }),
     deps = [
         ":headers",
-        "@fmt//:fmt",
     ],
 )
 
