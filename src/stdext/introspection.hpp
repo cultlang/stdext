@@ -1,3 +1,5 @@
+#pragma once
+
 // see: http://stackoverflow.com/a/13182321
 // see: http://gcc.gnu.org/ml/gcc-help/2007-10/msg00328.html
 
