@@ -94,24 +94,21 @@ namespace stdext
 		return os.str();
 	}
 
-	template<class CharType, class InputIterator,
-		typename std::enable_if<std::is_literal_type<CharType>::value && !std::is_pointer<CharType>::value>::type* = nullptr>
-		inline std::basic_string<CharType> join(std::basic_string<CharType> const& separator, InputIterator const& begin, InputIterator const& end)
+	template<class CharType, class InputIterator>
+	inline std::basic_string<CharType> join(std::basic_string<CharType> const& separator, InputIterator const& begin, InputIterator const& end)
 	{
 		return join<CharType, InputIterator>(std::basic_string<CharType>("") + separator, begin, end,
 			[](InputIterator it) -> std::basic_string<CharType>  {return *it; });
 	}
 
-	template<class CharType, class InputIterator,
-		typename std::enable_if<std::is_literal_type<CharType>::value && !std::is_pointer<CharType>::value>::type* = nullptr>
-		inline std::basic_string<CharType> join(CharType separator, InputIterator const& begin, InputIterator const& end, std::function<CharType(InputIterator)> transform)
+	template<class CharType, class InputIterator>
+	inline std::basic_string<CharType> join(CharType separator, InputIterator const& begin, InputIterator const& end, std::function<CharType(InputIterator)> transform)
 	{
 		return join(std::basic_string<CharType>("") + separator, begin, end, transform);
 	}
 
-	template<class CharType, class InputIterator,
-		typename std::enable_if<std::is_literal_type<CharType>::value && !std::is_pointer<CharType>::value>::type* = nullptr>
-		inline std::basic_string<CharType> join(CharType separator, InputIterator const& begin, InputIterator const& end)
+	template<class CharType, class InputIterator>
+	inline std::basic_string<CharType> join(CharType separator, InputIterator const& begin, InputIterator const& end)
 	{
 		return join<CharType, InputIterator>(std::basic_string<CharType>("") + separator, begin, end,
 			[](InputIterator it) -> std::basic_string<CharType> {return *it; });

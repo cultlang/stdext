@@ -5,6 +5,9 @@
 #include <iostream>
 
 TEST_CASE( "Can Build HexString", "[to_hex_string]" ) {
-    uint8_t data[4] = {0, 1, 2, 3};
-    REQUIRE( stdext::to_hex_string(data, 4) == "00010203");
+    uint32_t number = 0x00B1C2D3;
+    CHECK( stdext::to_hex_string(number, false, true) == "00b1c2d3");
+    CHECK( stdext::to_hex_string(number, false, false) == "d3c2b100");
+    CHECK( stdext::to_hex_string(number, true, true) == "00B1C2D3");
+    CHECK( stdext::to_hex_string(number, true, false) == "D3C2B100");
 }

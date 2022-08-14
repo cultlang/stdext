@@ -16,7 +16,7 @@ namespace stdext
 		};
 	}
 
-	inline std::string to_hex_string(uint8_t const* data, size_t len, bool upper = false, bool little_endian = false)
+	inline std::string to_hex_string(uint8_t const* data, size_t len, bool upper = false, bool little_endian = true)
 	{
 		char const* const hexmap = (upper) ? _details::hexmapUpper : _details::hexmapLower;
 
@@ -26,8 +26,8 @@ namespace stdext
 		{
 			for (size_t i = 0; i < len; ++i)
 			{
-				s[s_size - (2 * i + 1)]		    = hexmap[(data[i] & 0xF0) >> 4];
-				s[s_size - (2 * i + 2)]         = hexmap[ data[i] & 0x0F];
+				s[s_size - (2 * i + 2)]		    = hexmap[(data[i] & 0xF0) >> 4];
+				s[s_size - (2 * i + 1)]         = hexmap[ data[i] & 0x0F];
 			}
 		}
 		else
@@ -42,8 +42,8 @@ namespace stdext
 	}
 
 	template<typename T>
-	inline std::string to_hex_string(T const& value, bool upper = false, bool big_endian = false)
+	inline std::string to_hex_string(T const& value, bool upper = false, bool little_endian = true)
 	{
-		return to_hex_string((uint8_t const*)&value, sizeof(T), upper, !big_endian);
+		return to_hex_string((uint8_t const*)&value, sizeof(T), upper, little_endian);
 	}
 }

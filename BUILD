@@ -1,10 +1,16 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+COPTS = select({
+        "@bazel_tools//src/conditions:windows": ["/std:c++latest"],
+        "//conditions:default": ["-std=c++2b"],
+    })
+
+
 cc_library(
     name = "headers",
     visibility = ["//visibility:public"],
-    
-    deps=[
-        "@fmt//:headers",
-    ],
     
     includes=[
         "src",
@@ -12,6 +18,7 @@ cc_library(
     hdrs = glob([
         "src/**/*.h*",
     ]),
+    copts = COPTS,
 )
 
 cc_library(
@@ -21,13 +28,10 @@ cc_library(
     srcs = glob([
         "src/**/*.c*"
     ]),
-    copts = select({
-        "@bazel_tools//src/conditions:windows": ["/std:c++17"],
-        "//conditions:default": ["-std=c++17"],
-    }),
     deps = [
         ":headers",
     ],
+    copts = COPTS,
 )
 
 cc_test(
@@ -37,8 +41,5 @@ cc_test(
         ":code",
         "@catch//:single_include",
     ],
-    copts = select({
-        "@bazel_tools//src/conditions:windows": ["/std:c++17"],
-        "//conditions:default": ["-std=c++17"],
-    }),
+    copts = COPTS,
 )

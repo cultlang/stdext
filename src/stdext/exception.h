@@ -1,8 +1,7 @@
 #pragma once
 #include <exception>
 #include <string>
-
-#include "fmt/format.h"
+#include <format>
 
 namespace stdext
 {
@@ -39,15 +38,15 @@ namespace stdext
 		inline explicit exception(const std::string& message, TArgs... args)
 			: _inner(*this)
 		{
-			_msg = fmt::format(message, args...);
+			_msg = std::format(message, std::forward<TArgs>(args)...);
 		}
 
 		template <typename... TArgs>
 		inline explicit exception(const std::exception& inner, const std::string& message, TArgs... args)
 			: _inner(inner)
 		{
-			_msg = fmt::format(message, args...);
-			_msg_fmt = fmt::format("{0}:\n{1}", _msg.c_str(), _inner.what());
+			_msg = std::format(message, std::forward<TArgs>(args)...);
+			_msg_fmt = std::format("{0}:\n{1}", _msg.c_str(), _inner.what());
 		}
 
 		inline bool hasInner() const noexcept { return !_msg_fmt.empty(); }
