@@ -38,14 +38,14 @@ namespace stdext
 		inline explicit exception(const std::string& message, TArgs&&... args)
 			: _inner(*this)
 		{
-			_msg = std::format(message, std::forward<TArgs>(args)...);
+			_msg = std::vformat(message, std::make_format_args(args...));
 		}
 
 		template <typename... TArgs>
 		inline explicit exception(const std::exception& inner, const std::string& message, TArgs&&... args)
 			: _inner(inner)
 		{
-			_msg = std::format(message, std::forward<TArgs>(args)...);
+			_msg = std::vformat(message, std::make_format_args(args...));
 			_msg_fmt = std::format("{0}:\n{1}", _msg.c_str(), _inner.what());
 		}
 
