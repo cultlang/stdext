@@ -28,7 +28,7 @@ namespace stdext
     // other
     //
     
-    template <class...> constexpr std::false_type always_false { };
+    template <class... _> constexpr std::false_type always_false { };
     
 	//
 	// callables

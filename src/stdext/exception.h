@@ -35,14 +35,14 @@ namespace stdext
 		}*/
 
 		template <typename... TArgs>
-		inline explicit exception(const std::string& message, TArgs... args)
+		inline explicit exception(const std::string& message, TArgs&&... args)
 			: _inner(*this)
 		{
 			_msg = std::format(message, std::forward<TArgs>(args)...);
 		}
 
 		template <typename... TArgs>
-		inline explicit exception(const std::exception& inner, const std::string& message, TArgs... args)
+		inline explicit exception(const std::exception& inner, const std::string& message, TArgs&&... args)
 			: _inner(inner)
 		{
 			_msg = std::format(message, std::forward<TArgs>(args)...);
